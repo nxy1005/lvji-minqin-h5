@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>绿迹民勤 - 认知与参与平台</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sand: #C9A87C;
+      --sand-light: #E8DCC8;
+      --sand-dark: #A68B5B;
+      --green: #5A7C5A;
+      --green-light: #8FAA8F;
+      --green-dark: #3E5A3E;
+      --paper: #F7F4EF;
+      --paper-warm: #F0EBE3;
+      --charcoal: #2C2926;
+      --charcoal-light: #5A5550;
+      --white: #FFFFFF;
+      --shadow-soft: 0 4px 20px rgba(44, 41, 38, 0.08);
+      --shadow-medium: 0 8px 32px rgba(44, 41, 38, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #E5E1DA;
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+
+    .app-container {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,0,0,0.08);
+    }
+
+    @media (min-width: 768px) {
+      body { padding: 40px 0; }
+      .app-container { min-height: 90vh; border-radius: 32px; }
+    }
+
+    .page { display: none; min-height: 100vh; padding-bottom: 90px; }
+    .page.active { display: block; animation: fadeIn 0.5s ease-out; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== 首页 ===== */
+    .home-header {
+      background: linear-gradient(160deg, var(--sand-light) 0%, var(--paper) 70%);
+      padding: 48px 24px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -40px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(90,124,90,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .brand-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(90,124,90,0.1);
+      color: var(--green-dark);
+      font-size: 11px; font-weight: 500;
+      padding: 6px 12px; border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .brand-tag::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--green); border-radius: 50%;
+    }
+
+    .brand-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 32px; font-weight: 700;
+      line-height: 1.2; margin-bottom: 8px;
+    }
+
+    .brand-title span { color: var(--green); position: relative; }
+    .brand-title span::after {
+      content: ''; position: absolute; bottom: 2px; left: 0;
+      width: 100%; height: 8px;
+      background: rgba(90,124,90,0.2); z-index: -1;
+    }
+
+    .brand-subtitle {
+      font-size: 14px; color: var(--charcoal-light);
+      font-weight: 300; line-height: 1.7;
+    }
+
+    .eco-stats { display: flex; gap: 12px; margin-top: 24px; }
+    .eco-stat {
+      flex: 1; background: var(--white);
+      border-radius: 12px; padding: 14px;
+      box-shadow: var(--shadow-soft); text-align: center;
+    }
+    .eco-stat-value {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 22px; font-weight: 700; color: var(--green);
+    }
+    .eco-stat-label { font-size: 11px; color: var(--charcoal-light); margin-top: 4px; }
+
+    .modules-section { padding: 28px 20px; }
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px; font-weight: 600;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::before {
+      content: ''; width: 4px; height: 18px;
+      background: var(--green); border-radius: 2px;
+    }
+
+    .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .module-card {
+      background: var(--white); border-radius: 20px;
+      padding: 20px 16px; box-shadow: var(--shadow-soft);
+      position: relative; overflow: hidden;
+      cursor: pointer; border: 1px solid transparent;
+      transition: transform 0.2s;
+    }
+    .module-card:active { transform: scale(0.98); }
+    .module-card.featured {
+      grid-column: span 2;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+      color: var(--white); min-height: 140px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .module-card.featured .module-title,
+    .module-card.featured .module-desc { color: var(--white); }
+    .module-card.featured .module-icon { background: rgba(255,255,255,0.2); }
+    .module-card.featured .module-badge { background: rgba(255,255,255,0.25); color: var(--white); }
+    .module-card.featured::after {
+      content: ''; position: absolute; top: -30px; right: -30px;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .module-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--sand-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 12px;
+    }
+    .module-badge {
+      position: absolute; top: 14px; right: 14px;
+      font-size: 10px; padding: 3px 8px; border-radius: 10px;
+      background: rgba(90,124,90,0.1); color: var(--green-dark); font-weight: 500;
+    }
+    .module-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--charcoal); }
+    .module-desc { font-size: 12px; color: var(--charcoal-light); line-height: 1.5; }
+    .module-arrow {
+      position: absolute; bottom: 16px; right: 16px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--paper-warm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: var(--charcoal-light);
+    }
+
+    /* ===== 档案页 ===== */
+    .archive-header {
+      background: linear-gradient(180deg, var(--green-dark) 0%, var(--green) 100%);
+      color: var(--white); padding: 40px 24px 100px;
+      position: relative;
+    }
+    .archive-header::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+    .archive-title { font-family: 'Noto Serif SC', serif; font-size: 26px; font-weight: 700; margin-bottom: 8px; position: relative; }
+    .archive-subtitle { font-size: 14px; opacity: 0.85; font-weight: 300; position: relative; }
+    .archive-id {
+      display: inline-block; margin-top: 16px;
+      background: rgba(255,255,255,0.15); padding: 6px 14px;
+      border-radius: 20px; font-size: 12px; font-family: monospace; letter-spacing: 0.5px;
+    }
+
+    .archive-body { margin-top: -70px; padding: 0 20px; position: relative; z-index: 2; }
+    .archive-card { background: var(--white); border-radius: 20px; box-shadow: var(--shadow-medium); overflow: hidden; margin-bottom: 16px; }
+
+    .compare-section { position: relative; height: 240px; overflow: hidden; }
+    .compare-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .compare-after { clip-path: inset(0 0 0 50%); }
+    .compare-slider {
+      position: absolute; top: 0; left: 50%; width: 2px; height: 100%;
+      background: var(--white); transform: translateX(-50%);
+      cursor: ew-resize; z-index: 10; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    .compare-slider::after {
+      content: '↔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 32px; height: 32px; background: var(--white); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green-dark); font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .compare-labels {
+      position: absolute; bottom: 12px; left: 0; width: 100%;
+      display: flex; justify-content: space-between; padding: 0 16px;
+      pointer-events: none; z-index: 11;
+    }
+    .compare-label { background: rgba(0,0,0,0.5); color: var(--white); padding: 4px 10px; border-radius: 12px; font-size: 11px; }
+
+    .data-panel { padding: 20px; }
+    .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .data-item { text-align: center; padding: 14px 8px; background: var(--paper); border-radius: 12px; }
+    .data-value { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700; color: var(--green); }
+    .data-unit { font-size: 11px; color: var(--charcoal-light); }
+    .data-label { font-size: 11px; color: var(--charcoal-light); margin-top: 4px; }
+
+    .map-card {
+      height: 160px; background: linear-gradient(135deg, var(--sand-light) 0%, var(--paper-warm) 100%);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px; color: var(--charcoal-light); font-size: 13px;
+      position: relative; overflow: hidden;
+    }
+    .map-card::before {
+      content: ''; position: absolute; width: 200%; height: 200%;
+      background-image: radial-gradient(circle, var(--sand) 1px, transparent 1px);
+      background-size: 20px 20px; opacity: 0.15;
+    }
+    .map-pin { width: 40px; height: 40px; background: var(--green); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(90,124,90,0.4); }
+    .map-pin::after { content: '🌱'; transform: rotate(45deg); font-size: 18px; }
+
+    .timeline { padding: 0 20px 20px; }
+    .timeline-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .timeline-item { display: flex; gap: 14px; padding-bottom: 20px; position: relative; }
+    .timeline-item:not(:last-child)::before { content: ''; position: absolute; left: 15px; top: 30px; width: 2px; height: calc(100% - 10px); background: var(--sand-light); }
+    .timeline-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--sand-light); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; z-index: 2; }
+    .timeline-item.active .timeline-dot { background: var(--green); color: var(--white); }
+    .timeline-content { flex: 1; background: var(--paper); border-radius: 12px; padding: 14px; }
+    .timeline-date { font-size: 12px; color: var(--green); font-weight: 500; margin-bottom: 4px; }
+    .timeline-text { font-size: 13px; color: var(--charcoal); line-height: 1.6; }
+    .timeline-tag { display: inline-block; margin-top: 8px; font-size: 10px; padding: 2px 8px; border-radius: 8px; background: rgba(90,124,90,0.1); color: var(--green-dark); }
+
+    /* ===== 积分页 ===== */
+    .points-header {
+      background: linear-gradient(135deg, var(--sand) 0%, var(--sand-dark) 100%);
+      color: var(--white); padding: 40px 24px 90px;
+      position: relative; overflow: hidden;
+    }
+    .points-header::before {
+      content: ''; position: absolute; top: -80px; right: -60px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .points-title { font-family: 'Noto Serif SC', serif; font-size: 24px; font-weight: 700; margin-bottom: 4px; position: relative; }
+    .points-subtitle { font-size: 13px; opacity: 0.85; position: relative; }
+    .points-balance-card {
+      margin-top: 24px; background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px); border-radius: 20px;
+      padding: 24px; border: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+    }
+    .points-label { font-size: 12px; opacity: 0.85; margin-bottom: 8px; }
+    .points-value { font-family: 'Noto Serif SC', serif; font-size: 42px; font-weight: 700; margin-bottom: 16px; }
+    .points-level { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .level-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden; }
+    .level-progress { height: 100%; width: 68%; background: var(--white); border-radius: 3px; }
+
+    .points-body { margin-top: -60px; padding: 0 20px; position: relative; z-index: 2; }
+    .task-card, .shop-card { background: var(--white); border-radius: 20px; box-shadow: var(--shadow-medium); padding: 20px; margin-bottom: 16px; }
+    .task-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--paper-warm); }
+    .task-item:last-child { border-bottom: none; }
+    .task-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--sand-light); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .task-info { flex: 1; }
+    .task-name { font-size: 14px; font-weight: 500; color: var(--charcoal); margin-bottom: 2px; }
+    .task-desc { font-size: 11px; color: var(--charcoal-light); }
+    .task-points { font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 700; color: var(--sand-dark); }
+    .task-btn { background: var(--green); color: var(--white); border: none; padding: 6px 14px; border-radius: 14px; font-size: 12px; cursor: pointer; margin-left: 8px; }
+    .task-btn.completed { background: var(--paper-warm); color: var(--charcoal-light); }
+
+    .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .shop-item { background: var(--paper); border-radius: 12px; overflow: hidden; transition: transform 0.2s; cursor: pointer; }
+    .shop-item:active { transform: scale(0.98); }
+    .shop-img { height: 90px; background: linear-gradient(135deg, var(--sand-light) 0%, var(--green-light) 100%); display: flex; align-items: center; justify-content: center; font-size: 32px; }
+    .shop-info { padding: 12px; }
+    .shop-name { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+    .shop-price { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 700; color: var(--sand-dark); }
+
+    /* ===== 底部导航 ===== */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 430px;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(0,0,0,0.05);
+      display: flex; justify-content: space-around;
+      padding: 10px 0 24px; z-index: 100;
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--charcoal-light); font-size: 11px; cursor: pointer; transition: color 0.2s; padding: 4px 16px; }
+    .nav-item.active { color: var(--green); }
+    .nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+    .tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; padding: 3px 8px; border-radius: 10px; background: var(--paper-warm); color: var(--charcoal-light); }
+    .tag.green { background: rgba(90,124,90,0.1); color: var(--green-dark); }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 首页 -->
+    <div class="page active" id="page-home">
+      <header class="home-header">
+        <div class="brand-tag">民勤生态志愿平台</div>
+        <h1 class="brand-title">绿迹<span>民勤</span></h1>
+        <p class="brand-subtitle">把种下的每一棵树，变成看得见的绿色回响。<br>从认知到参与，从参与到守护。</p>
+        <div class="eco-stats">
+          <div class="eco-stat"><div class="eco-stat-value">12,480</div><div class="eco-stat-label">累计植树</div></div>
+          <div class="eco-stat"><div class="eco-stat-value">87.3%</div><div class="eco-stat-label">春秋季成活率</div></div>
+          <div class="eco-stat"><div class="eco-stat-value">2,156</div><div class="eco-stat-label">守护志愿者</div></div>
+        </div>
+      </header>
+
+      <section class="modules-section">
+        <h2 class="section-title">功能模块</h2>
+        <div class="module-grid">
+          <div class="module-card featured" onclick="goTo('archive')">
+            <div>
+              <span class="module-badge">核心模块</span>
+              <div class="module-icon">🌳</div>
+              <h3 class="module-title">树苗成长档案</h3>
+              <p class="module-desc">每片林地独立编号，无人机+GPS定位，春秋两次回访，让志愿者看到自己种下的树如何活下来。</p>
+            </div>
+            <div class="module-arrow">→</div>
+          </div>
+
+          <div class="module-card" onclick="showToast('功能开发中')">
+            <span class="module-badge">6 门微课</span>
+            <div class="module-icon">📚</div>
+            <h3 class="module-title">生态科普舱</h3>
+            <p class="module-desc">民勤地理、沙生植物、八步沙故事、艾黎校史</p>
+            <div class="module-arrow">→</div>
+          </div>
+
+          <div class="module-card" onclick="goTo('points')">
+            <span class="module-badge">可兑换</span>
+            <div class="module-icon">🌾</div>
+            <h3 class="module-title">云认养积分</h3>
+            <p class="module-desc">学习答题赚积分，兑换线下名额与民勤农产品</p>
+            <div class="module-arrow">→</div>
+          </div>
+
+          <div class="module-card" onclick="showToast('功能开发中')">
+            <span class="module-badge">3 章节</span>
+            <div class="module-icon">🎒</div>
+            <h3 class="module-title">行前培训库</h3>
+            <p class="module-desc">压沙技术、安全须知、民勤风土人情</p>
+            <div class="module-arrow">→</div>
+          </div>
+
+          <div class="module-card" onclick="showToast('功能开发中')">
+            <span class="module-badge">最新</span>
+            <div class="module-icon">📰</div>
+            <h3 class="module-title">成果发布厅</h3>
+            <p class="module-desc">调研报告、规划建议、志愿者故事</p>
+            <div class="module-arrow">→</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 树苗成长档案 -->
+    <div class="page" id="page-archive">
+      <header class="archive-header">
+        <h1 class="archive-title">我的林地档案</h1>
+        <p class="archive-subtitle">你种下的不只是树苗，而是可以被追踪、被见证、被延续的绿色希望。</p>
+        <div class="archive-id">林地编号 · MQ-2026-A-07</div>
+      </header>
+
+      <div class="archive-body">
+        <div class="archive-card">
+          <div class="compare-section" id="compareSection">
+            <img class="compare-image compare-before" src="images/before_small.jpg" alt="种植前">
+            <img class="compare-image compare-after" src="images/after_small.jpg" alt="种植后" id="compareAfter">
+            <div class="compare-slider" id="compareSlider"></div>
+            <div class="compare-labels">
+              <span class="compare-label">2025.10 种植前</span>
+              <span class="compare-label">2026.05 回访时</span>
+            </div>
+          </div>
+
+          <div class="data-panel">
+            <div class="data-grid">
+              <div class="data-item"><div class="data-value">1.2<span class="data-unit">亩</span></div><div class="data-label">认领面积</div></div>
+              <div class="data-item"><div class="data-value">86<span class="data-unit">%</span></div><div class="data-label">成活率</div></div>
+              <div class="data-item"><div class="data-value">320<span class="data-unit">株</span></div><div class="data-label">种植株数</div></div>
+            </div>
+
+            <div class="map-card">
+              <div class="map-pin"></div>
+              <div>GPS · 38°32'16"N, 103°05'42"E</div>
+              <span class="tag green">民勤县昌宁镇</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="archive-card">
+          <div class="timeline">
+            <h3 class="timeline-title">成长时间轴</h3>
+            <div class="timeline-item active">
+              <div class="timeline-dot">🌱</div>
+              <div class="timeline-content">
+                <div class="timeline-date">2026年5月 · 春季回访</div>
+                <div class="timeline-text">梭梭与花棒新芽萌发，土壤含水率回升，无人机航拍显示植被覆盖度达到 34%。</div>
+                <span class="timeline-tag">已推送给你</span>
+              </div>
+            </div>
+            <div class="timeline-item active">
+              <div class="timeline-dot">🍂</div>
+              <div class="timeline-content">
+                <div class="timeline-date">2025年10月 · 秋季回访</div>
+                <div class="timeline-text">完成秋季补植，固沙网格稳固，林地边界GPS定位完成，你的 320 株树苗进入越冬养护。</div>
+                <span class="timeline-tag">已推送给你</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🌳</div>
+              <div class="timeline-content">
+                <div class="timeline-date">2025年4月 · 初次种植</div>
+                <div class="timeline-text">你与 24 位志愿者共同完成压沙、挖坑、栽植，这片土地开始拥有编号 MQ-2026-A-07。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 积分中心 -->
+    <div class="page" id="page-points">
+      <header class="points-header">
+        <h1 class="points-title">云认养积分</h1>
+        <p class="points-subtitle">把每一次学习、分享与答题，变成真实可触的民勤参与。</p>
+
+        <div class="points-balance-card">
+          <div class="points-label">我的积分余额</div>
+          <div class="points-value" id="pointsValue">1,280</div>
+          <div class="points-level">
+            <span>绿苗守护者 Lv.3</span>
+            <div class="level-bar"><div class="level-progress"></div></div>
+            <span>68%</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="points-body">
+        <div class="task-card">
+          <h2 class="section-title">今日任务</h2>
+          <div class="task-item">
+            <div class="task-icon">📖</div>
+            <div class="task-info"><div class="task-name">完成一节生态微课</div><div class="task-desc">八步沙三代人治沙故事</div></div>
+            <div class="task-points">+30</div>
+            <button class="task-btn" data-points="30" onclick="completeTask(this)">去完成</button>
+          </div>
+          <div class="task-item">
+            <div class="task-icon">❓</div>
+            <div class="task-info"><div class="task-name">每日答题挑战</div><div class="task-desc">5 道民勤生态知识题</div></div>
+            <div class="task-points">+50</div>
+            <button class="task-btn" data-points="50" onclick="completeTask(this)">去完成</button>
+          </div>
+          <div class="task-item">
+            <div class="task-icon">↗️</div>
+            <div class="task-info"><div class="task-name">分享我的林地档案</div><div class="task-desc">邀请好友一起守护绿色</div></div>
+            <div class="task-points">+20</div>
+            <button class="task-btn" data-points="20" onclick="completeTask(this)">去完成</button>
+          </div>
+          <div class="task-item">
+            <div class="task-icon">✅</div>
+            <div class="task-info"><div class="task-name">完成行前安全培训</div><div class="task-desc">已学完所有章节</div></div>
+            <div class="task-points">+100</div>
+            <button class="task-btn completed">已完成</button>
+          </div>
+        </div>
+
+        <div class="shop-card">
+          <h2 class="section-title">积分兑换</h2>
+          <div class="shop-grid">
+            <div class="shop-item" onclick="exchange(1500, '线下植树名额')">
+              <div class="shop-img">🌲</div>
+              <div class="shop-info"><div class="shop-name">线下植树名额</div><div class="shop-price">1,500 积分</div></div>
+            </div>
+            <div class="shop-item" onclick="exchange(600, '民勤蜜瓜 2 个')">
+              <div class="shop-img">🍈</div>
+              <div class="shop-info"><div class="shop-name">民勤蜜瓜 2 个</div><div class="shop-price">600 积分</div></div>
+            </div>
+            <div class="shop-item" onclick="exchange(400, '防风沙巾')">
+              <div class="shop-img">🧣</div>
+              <div class="shop-info"><div class="shop-name">防风沙巾</div><div class="shop-price">400 积分</div></div>
+            </div>
+            <div class="shop-item" onclick="exchange(350, '治沙主题手账')">
+              <div class="shop-img">📓</div>
+              <div class="shop-info"><div class="shop-name">治沙主题手账</div><div class="shop-price">350 积分</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="goTo('home')" data-page="home"><div class="nav-icon">🏠</div><span>首页</span></div>
+      <div class="nav-item" onclick="goTo('archive')" data-page="archive"><div class="nav-icon">🌳</div><span>档案</span></div>
+      <div class="nav-item" onclick="goTo('points')" data-page="points"><div class="nav-icon">🌾</div><span>积分</span></div>
+      <div class="nav-item" onclick="showToast('功能开发中')" data-page="profile"><div class="nav-icon">👤</div><span>我的</span></div>
+    </nav>
+  </div>
+
+  <script>
+    let currentPoints = 1280;
+
+    function goTo(pageName) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageName).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const navItem = document.querySelector('.nav-item[data-page="' + pageName + '"]');
+      if (navItem) navItem.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // 航拍对比滑块
+    const compareSection = document.getElementById('compareSection');
+    const compareAfter = document.getElementById('compareAfter');
+    const compareSlider = document.getElementById('compareSlider');
+    let isDragging = false;
+
+    function updateCompare(x) {
+      const rect = compareSection.getBoundingClientRect();
+      let percentage = ((x - rect.left) / rect.width) * 100;
+      percentage = Math.max(0, Math.min(100, percentage));
+      compareAfter.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+      compareSlider.style.left = percentage + '%';
+    }
+
+    compareSlider.addEventListener('mousedown', () => isDragging = true);
+    compareSlider.addEventListener('touchstart', () => isDragging = true);
+    document.addEventListener('mouseup', () => isDragging = false);
+    document.addEventListener('touchend', () => isDragging = false);
+    document.addEventListener('mousemove', (e) => { if (isDragging) updateCompare(e.clientX); });
+    document.addEventListener('touchmove', (e) => { if (isDragging) updateCompare(e.touches[0].clientX); });
+    compareSection.addEventListener('click', (e) => { if (e.target !== compareSlider) updateCompare(e.clientX); });
+
+    // 任务完成
+    function completeTask(btn) {
+      if (btn.classList.contains('completed')) return;
+      const points = parseInt(btn.dataset.points);
+      currentPoints += points;
+      document.getElementById('pointsValue').textContent = currentPoints.toLocaleString();
+      btn.textContent = '已完成';
+      btn.classList.add('completed');
+      showToast(`获得 ${points} 积分`);
+    }
+
+    // 积分兑换
+    function exchange(price, name) {
+      if (currentPoints >= price) {
+        currentPoints -= price;
+        document.getElementById('pointsValue').textContent = currentPoints.toLocaleString();
+        showToast(`兑换成功：${name}`);
+      } else {
+        showToast('积分不足');
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.75);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+  </script>
+</body>
+</html>
